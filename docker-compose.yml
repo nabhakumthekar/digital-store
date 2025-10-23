@@ -1,0 +1,48 @@
+services:
+  mysql:
+    image: mysql:8.3
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: digital_store
+      MYSQL_USER: store_user
+      MYSQL_PASSWORD: store_pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - digital-store-network
+
+  backend:
+    build: ./backend
+    container_name: digital-store-backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/digital_store
+      SPRING_DATASOURCE_USERNAME: store_user
+      SPRING_DATASOURCE_PASSWORD: store_pass
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    depends_on:
+      - mysql
+    ports:
+      - "8080:8080"
+      - "5005:5005"
+    networks:
+      - digital-store-network
+
+  frontend:
+    build: ./frontend
+    container_name: digital-store-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - digital-store-network
+
+volumes:
+  mysql_data:
+
+networks:
+  digital-store-network:
+    driver: bridge
