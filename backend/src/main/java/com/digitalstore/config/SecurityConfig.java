@@ -20,7 +20,8 @@ public class SecurityConfig {
       .csrf(csrf -> csrf.disable())
       .cors(Customizer.withDefaults())
       .authorizeHttpRequests(auth -> auth
-        .requestMatchers("/api/v1/users/**").permitAll()
+        .requestMatchers("/api/v1/users/login").permitAll()
+        .requestMatchers("/api/v1/users/register").permitAll()
         .requestMatchers("/api/v1/products/upload").hasRole("ADMIN")
         .requestMatchers("/api/v1/products/**").permitAll()
         .anyRequest().authenticated()
@@ -34,14 +35,16 @@ public class SecurityConfig {
   public UserDetailsService userDetailsService(UserRepository userRepository) {
     return username -> {
       var user = userRepository.findByUsername(username);
+      System.out.println("user" + user.getUsername());
       if (user == null) {
         throw new UsernameNotFoundException("User not found: " + username);
       }
       // Passwords are plain text for simplicity
       return User.withUsername(user.getUsername())
         .password(user.getPassword())
-        .roles(String.valueOf(user.getRole())) // ADMIN or VIEWER
+        .roles(String.valueOf(user.getRole())) // <-- use authorities instead of roles()
         .build();
+
     };
   }
 

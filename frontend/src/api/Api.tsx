@@ -54,7 +54,7 @@ export const register = async ({ username, password, role }: { username: string,
       password,
       role
     });
-    return res.data;
+    return res;
   } catch (err: any) {
     return err;
   }
