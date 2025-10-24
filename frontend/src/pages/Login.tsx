@@ -19,6 +19,9 @@ function Login() {
       return setMessage('Please enter username and password'); 
     } else {
       login({ username, password }).then((data) => {
+        if (data.status === 401) {
+          return setMessage(data.message);
+        }
         navigate('/homePage', { state: { username, password, role: data.role } });
       }).catch(() => {
         setMessage('Error connecting to server');
