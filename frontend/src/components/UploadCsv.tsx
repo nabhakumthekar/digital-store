@@ -11,14 +11,27 @@ function UploadCsv({ username, password, onUploadSuccess }: { username: string; 
   const [message, setMessage] = useState("");
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setFile(e.target.files[0]);
+    const selectedFile = e.target.files && e.target.files.length > 0 ? e.target.files[0] : null;
+
+    if (!selectedFile) return;
+    if (selectedFile) {
+      const isCSV =
+        selectedFile.type === "text/csv" ||
+        selectedFile.name.toLowerCase().endsWith(".csv");
+
+      if (!isCSV) {
+        alert("Please upload a valid CSV file!");
+        e.target.value = ""; // clear file input
+        return;
+      }
+
+      setFile(selectedFile);
     }
-  };
+  }
 
   const handleUpload = async () => {
     if (!file) return alert('Please select a CSV file');
-    
+
     uploadFile(file, username, password).then((data) => {
       setMessage(data);
       onUploadSuccess();
@@ -29,12 +42,12 @@ function UploadCsv({ username, password, onUploadSuccess }: { username: string; 
 
   return (
     <>
-    <Grid container spacing={2} direction="row" alignItems="center" justifyContent="center">
-      <h3>Upload Product CSV</h3>
-      <input type="file" accept=".csv" onChange={handleFileChange} />
-      <Button variant="contained" onClick={handleUpload}>Upload</Button>
-    </Grid>
-     {message !== "" && <Alert severity="success">{message}</Alert>}
+      <Grid container spacing={2} direction="row" alignItems="center" justifyContent="center">
+        <h3>Upload Product CSV</h3>
+        <input type="file" accept=".csv" onChange={handleFileChange} />
+        <Button variant="contained" onClick={handleUpload}>Upload</Button>
+      </Grid>
+      {message !== "" && <Alert severity="success">{message}</Alert>}
     </>
   );
 }
