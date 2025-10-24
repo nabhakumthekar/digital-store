@@ -14,6 +14,7 @@ import { fetchProducts } from '../api/Api';
 
 function HomePage() {
   const [products, setProducts] = useState<Product[]>([]);
+  const [isLastPage, setIsLastPage] = useState(false);
   const [page, setPage] = useState(0);
   const [filter, setFilter] = useState('');
 
@@ -27,7 +28,8 @@ function HomePage() {
 
   const handleFetchProducts = async () => {
     fetchProducts({ page, filter }).then((data) => {
-      setProducts(data.content || data);
+      setProducts(data.content);
+      setIsLastPage(data.last);
     }).catch((err) => {
       throw err;
     });
@@ -65,7 +67,7 @@ function HomePage() {
       </Grid>
       <Grid container spacing={2} direction="row" alignItems="center" justifyContent="center">
         <Button onClick={() => setPage(page - 1)} disabled={page <= 0}>Prev</Button>
-        <Button onClick={() => setPage(page + 1)} disabled={products.length < 10}>Next</Button>
+        <Button onClick={() => setPage(page + 1)} disabled={isLastPage}>Next</Button>
       </Grid>
       <Button variant="contained" onClick={handleLogout}>Logout</Button>
     </Grid>
