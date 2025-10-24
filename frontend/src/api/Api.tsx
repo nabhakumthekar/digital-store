@@ -66,7 +66,6 @@ export const login = async ({ username, password }: { username: string, password
       username,
       password
     });
-
     return res.data;
   } catch (err) {
     return err;

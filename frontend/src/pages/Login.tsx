@@ -22,6 +22,9 @@ function Login() {
         if (data.status === 401) {
           return setMessage(data.message);
         }
+        if (data === "") {
+          return setMessage("Invalid username or password");
+        }
         navigate('/homePage', { state: { username, password, role: data.role } });
       }).catch(() => {
         setMessage('Error connecting to server');
