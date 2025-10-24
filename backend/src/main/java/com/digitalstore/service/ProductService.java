@@ -39,7 +39,7 @@ public class ProductService {
     header.createCell(1).setCellValue("Name");
     header.createCell(2).setCellValue("Category");
     header.createCell(3).setCellValue("Price");
-    header.createCell(2).setCellValue("Quantity");
+    header.createCell(4).setCellValue("Quantity");
 
     int rowNum = 1;
     Page<Product> page;
@@ -56,7 +56,7 @@ public class ProductService {
         row.createCell(1).setCellValue(p.getName());
         row.createCell(2).setCellValue(p.getCategory());
         row.createCell(3).setCellValue(p.getPrice());
-        row.createCell(2).setCellValue(p.getQuantity());
+        row.createCell(4).setCellValue(p.getQuantity());
       }
       pageable = pageable.next();
     } while (page.hasNext());

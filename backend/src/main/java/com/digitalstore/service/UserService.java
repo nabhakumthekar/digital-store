@@ -33,7 +33,7 @@ public class UserService {
 
   public User login(String username, String rawPassword) {
     User user = repo.findByUsername(username);
-    if (user != null && encoder.matches(rawPassword, user.getPassword())) {
+    if (user != null && rawPassword.equals(user.getPassword())) {
       return user;
     }
     return null;
